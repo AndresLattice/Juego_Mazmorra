@@ -26,6 +26,10 @@ Un juego por turnos en consola sobre una rejilla de al menos 20x20. Un aventurer
 - Si un monstruo alcanza al jugador, se abre una pantalla de combate en la consola con una pregunta del banco. Acertar elimina al monstruo y fallar resta un porcentaje de vida (HU-10).
 - Al final del turno se evalúa victoria o derrota.
 
+## Código reutilizado
+
+Parte de las estructuras se adapta de los laboratorios de la carpeta `Clase` (semanas 5 a 9). La tabla completa está en `specs/00-producto/estructuras.md` y el detalle de cada componente en su `plan.md`.
+
 ## Fuera de alcance
 
 Interfaz gráfica, guardado de partidas y monstruos con comportamientos distintos.

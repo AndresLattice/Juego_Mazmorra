@@ -19,8 +19,26 @@
 - El banco de preguntas del combate (HU-10) reutiliza la lista circular de turnos. Rota sin fin y no repite hasta agotar el banco. No agrega estructura nueva.
 - Soporte interno: el montículo y la tabla hash usan un arreglo como almacenamiento. Se justifica en el `plan.md` de cada uno.
 
+## Código de Clase que se reutiliza o se piensa reutilizar
+
+Los laboratorios del curso (carpeta `Clase`) ya traen implementaciones de varias estructuras. Se parte de ellas y se adaptan. Cada componente declara su origen en su `plan.md`.
+
+| Capacidad | Origen en Clase | Estado |
+|---|---|---|
+| Deshacer y rehacer | `semana_08/pila.py` (`PilaEnlazada`) y `semana_08/historial.py` | Reutilizado |
+| Nodo de las estructuras enlazadas | `semana_05/nodo.py` | Reutilizado |
+| Inventario | `semana_06/lista_enlazada.py` | Se piensa reutilizar |
+| Orden de los turnos y banco de preguntas | `semana_07/lista_circular.py` y `turnos.py` | Se piensa reutilizar |
+| Eventos y BFS de los monstruos | `semana_09/cola.py` (`ColaEnlazada`) | Se piensa reutilizar |
+| Puntajes y A* | `semana_09/cola_prioridad.py` como primera versión, con montículo después | Se piensa reutilizar |
+| Mapa | Propio | Sin reutilizar |
+| Índice de entidades | Propio | Sin reutilizar |
+
+Regla: `list` solo se acepta como soporte interno y se justifica en el `plan.md` del componente.
+
 ## Historial de cambios
 
 | Versión | Fecha | Cambio | Motivo |
 |---|---|---|---|
 | 1.0 | 2026-10-06 | Versión inicial | Entrega 1 |
+| 1.1 | 2026-10-06 | Se agrega la tabla de código reutilizado de Clase | Dejar declarado qué viene de los laboratorios |
