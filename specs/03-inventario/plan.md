@@ -35,7 +35,7 @@ Ninguno. La lista usa los nodos de `estructuras/nodo.py`.
 
 | Archivo del proyecto | Origen en Clase | Qué se hizo |
 |---|---|---|
-| `estructuras/lista_enlazada.py` | `Clase/semana_06/lista_enlazada.py` | Se conservan el diseño y los nombres. Se completan `_insertar_en_medio` y `_eliminar_no_primero`, que en el laboratorio estaban sin terminar |
+| `estructuras/lista_enlazada.py` | `Clase/semana_06/lista_enlazada.py` | Se conservan el diseño y los nombres. Se completan `_insertar_en_medio` y `_eliminar_no_primero`, que en el laboratorio estaban sin terminar. Se quitan `__getitem__` y `__repr__` |
 
 ## Historial de cambios
 
