@@ -23,7 +23,7 @@ Cada celda guarda uno de tres valores:
 | Mapa(filas, columnas) | O(f·c) |
 | en_rango | O(1) |
 | poner_obstaculo, es_obstaculo | O(1) |
-| poner_objeto, quitar_objeto | O(1) |
+| poner_objeto, objeto_en, quitar_objeto | O(1) |
 
 ## Alternativa descartada
 

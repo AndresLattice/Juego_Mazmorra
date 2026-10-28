@@ -1,6 +1,6 @@
 # Spec: Mapa
 
-Versión 1.0. Soporta HU-01 y HU-02 (Must).
+Versión 1.1. Soporta HU-01 y HU-02 (Must).
 
 ## Propósito
 
@@ -20,6 +20,7 @@ Representar la mazmorra como una rejilla de celdas. Cada celda puede estar libre
 | poner_obstaculo(fila, columna) | la celda existe | la celda tiene obstáculo | IndexError si la celda no existe |
 | es_obstaculo(fila, columna) | la celda existe | verdadero si tiene obstáculo | IndexError |
 | poner_objeto(fila, columna, objeto) | la celda existe | la celda guarda el objeto | IndexError |
+| objeto_en(fila, columna) | la celda existe | devuelve el objeto o None si no hay | IndexError |
 | quitar_objeto(fila, columna) | la celda existe | devuelve el objeto y deja la celda libre; None si no había | IndexError |
 
 ## Invariantes
@@ -49,3 +50,4 @@ Los cuatro criterios se verifican sobre la partida, que usa el mapa.
 | Versión | Fecha | Cambio | Motivo |
 |---|---|---|---|
 | 1.0 | 2026-10-27 | Versión inicial | Entrega 2 |
+| 1.1 | 2026-10-27 | Se agrega `objeto_en` | La consola necesita leer cada celda para dibujar el mapa |
