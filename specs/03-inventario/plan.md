@@ -1,6 +1,6 @@
 # Plan: Inventario
 
-Versión 1.0.
+Versión 1.1.
 
 ## Estructura elegida
 
@@ -42,3 +42,4 @@ Ninguno. La lista usa los nodos de `estructuras/nodo.py`.
 | Versión | Fecha | Cambio | Motivo |
 |---|---|---|---|
 | 1.0 | 2026-10-27 | Versión inicial | Entrega 2 |
+| 1.1 | 2026-10-27 | Se declaran los métodos de Clase que se quitaron (`__getitem__` y `__repr__`) | Registrar todo cambio frente al laboratorio |

@@ -1,6 +1,6 @@
 # Plan: Mapa
 
-Versión 1.0.
+Versión 1.1.
 
 ## Estructura elegida
 
@@ -38,3 +38,4 @@ Se usan `list` de Python como arreglos de tamaño fijo, como el arreglo de la se
 | Versión | Fecha | Cambio | Motivo |
 |---|---|---|---|
 | 1.0 | 2026-10-27 | Versión inicial | Entrega 2 |
+| 1.1 | 2026-10-27 | Se agrega `objeto_en` a la tabla de complejidad | Acompaña la spec 1.1 |
