@@ -1,6 +1,6 @@
 # Priorización MoSCoW: Juego de mazmorra
 
-**Fecha:** 2026-10-06 · **Versión:** 1.0
+**Fecha:** 2026-10-06 · **Versión:** 1.1
 
 ## Capacidad
 
@@ -58,6 +58,15 @@ Los Could no entran en el cálculo de horas.
 5. HU-05: la persecución usa el mapa y genera eventos de colisión.
 6. HU-07: victoria y derrota dependen de todo lo anterior.
 
+## Avance en la Entrega 2
+
+| Historia | Estado |
+|---|---|
+| HU-01, HU-02, HU-03, HU-04, HU-06 | Terminadas e integradas en `main.py` |
+| HU-05, HU-07 | Pendientes para la Entrega final |
+
+No cambió la prioridad de ninguna historia. Cambió el orden de construcción: HU-06 (eventos) se adelantó antes que HU-05 (persecución), porque la cola de eventos es la misma que usará BFS. Así la cola ya está probada cuando llegue la persecución.
+
 ## Plan de contingencia
 
 Si mi capacidad se redujera a la mitad, unas 12 h:
@@ -73,3 +82,4 @@ Si mi capacidad se redujera a la mitad, unas 12 h:
 | Versión | Fecha | Qué cambió de prioridad | Por qué |
 |---------|-------|-------------------------|---------|
 | 1.0 | 2026-10-06 | Versión inicial | Entrega 1 |
+| 1.1 | 2026-10-27 | Ninguna prioridad cambió. Se registra el avance y el orden real de construcción | HU-06 se construyó antes que HU-05 para tener lista la cola que usará BFS |
