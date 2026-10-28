@@ -60,3 +60,10 @@ Como jugador, quiero responder una pregunta de cultura general cuando un monstru
 - CA-27: Si el jugador responde mal, pierde un porcentaje fijo de su vida y el monstruo sigue en el mapa.
 - CA-28: Si la vida del jugador llega a 0, la partida termina con derrota.
 - CA-29: Las preguntas rotan sin repetirse hasta haber salido todas las del banco.
+
+## Historial de cambios
+
+| Versión | Fecha | Cambio | Motivo |
+|---|---|---|---|
+| 1.0 | 2026-10-06 | Versión inicial | Entrega 1 |
+| 1.1 | 2026-10-27 | Se agrega este historial de cambios | Registrar los cambios futuros, como el de CA-18 si entra HU-10 |

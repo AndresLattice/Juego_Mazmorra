@@ -1,4 +1,6 @@
-# Spec del sistema (versión inicial)
+# Spec del sistema
+
+Versión 0.2.
 
 ## Qué hace
 
@@ -16,6 +18,10 @@ Un juego por turnos en consola sobre una rejilla de al menos 20x20. Un aventurer
 | 06-rutas | Grafo implícito con BFS | HU-05 |
 | 07-montículo | Montículo máximo | HU-08 y A* de HU-09 |
 | 08-indice | Tabla hash | HU-08 |
+
+## Estado en la Entrega 2
+
+Implementados e integrados en `dominio/partida.py` y `main.py`: 01-historial, 02-mapa, 03-inventario y 04-eventos. Los monstruos se guardan en una lista enlazada y todavía no se mueven. Los componentes 05 a 08 entran en la Entrega final.
 
 ## Cómo encajan los contratos
 
@@ -39,3 +45,4 @@ Interfaz gráfica, guardado de partidas y monstruos con comportamientos distinto
 | Versión | Fecha | Cambio | Motivo |
 |---|---|---|---|
 | 0.1 | 2026-10-06 | Versión inicial | Entrega 1 |
+| 0.2 | 2026-10-27 | Se agrega el estado de la Entrega 2 | Registrar qué componentes ya están integrados |
