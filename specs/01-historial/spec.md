@@ -1,6 +1,6 @@
 # Spec: Historial de acciones
 
-Versión 1.1. Soporta HU-04 (Must).
+Versión 1.2. Soporta HU-04 (Must).
 
 ## Propósito
 
@@ -34,8 +34,16 @@ Guardar las acciones del jugador para poder deshacerlas y rehacerlas, conservand
 | CA-08 | Deshacer devuelve la última acción registrada | test_deshacer_devuelve_ultima |
 | CA-09 | La acción devuelta conserva sus efectos para poder revertirlos | test_deshacer_conserva_efectos |
 | CA-10 | Registrar una acción nueva elimina todo lo rehacible | test_accion_nueva_vacia_rehacer |
-| CA-11 | Deshacer sin historial avisa con PilaVaciaError y no corrompe el estado | test_deshacer_sin_historial |
+| CA-11 | Deshacer sin historial se rechaza sin cambiar el estado. La partida lo muestra al jugador como aviso, sin error | test_deshacer_sin_historial |
 | CA-12 | Rehacer después de deshacer devuelve la misma acción | test_rehacer_devuelve_deshecha |
+
+## Relación con las historias
+
+Este componente cubre la parte de cada criterio que toca el historial. La partida completa el resto:
+
+- CA-08: el historial devuelve la acción; la partida restaura posición e inventario.
+- CA-09: el historial conserva los efectos; la partida devuelve el objeto al mapa.
+- CA-11: el historial rechaza la operación; la partida muestra el aviso.
 
 ## Casos extremos
 
@@ -54,3 +62,4 @@ El comportamiento de este componente coincide con `Historial` del laboratorio de
 |---|---|---|---|
 | 1.0 | 2026-10-06 | Versión inicial | Entrega 1 |
 | 1.1 | 2026-10-06 | Nombres `puede_deshacer` y `puede_rehacer`; error `PilaVaciaError`; se declara el código reutilizado | Alinear la spec con el laboratorio de la semana 8 que se reutiliza |
+| 1.2 | 2026-10-27 | CA-11 aclara que el jugador recibe un aviso, no un error. Se agrega la relación con las historias | La spec 1.1 contradecía a HU-04, que pide avisar sin error |
