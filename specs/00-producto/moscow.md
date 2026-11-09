@@ -1,6 +1,6 @@
 # Priorización MoSCoW: Juego de mazmorra
 
-**Fecha:** 2026-10-06 · **Versión:** 1.1
+**Fecha:** 2026-10-06 · **Versión:** 1.2
 
 ## Capacidad
 
@@ -25,13 +25,7 @@ Orden de las horas: las 24 h dejan 1 h de holgura. No cabe ningún Should dentro
 
 ## Should
 
-| Historia | Horas | Condición para entrar |
-|----------|-------|-----------------------|
-| HU-10 Combate con pregunta de cultura general | 4 | Primero en entrar. Necesita HU-05 y HU-07 terminadas. No es un mínimo del dominio: mientras no entre, la colisión es derrota directa |
-| HU-09 Persecución con A* y distancia Manhattan | 4 | Solo si HU-05 termina antes de lo estimado. Bajó de Must porque la búsqueda en anchura demuestra lo mismo |
-| HU-08 Buscar entidad por identificador y ver el mejor puntaje | 4 | Solo si los Must cierran con holgura. No es un mínimo del dominio |
-
-Prioridad entre Should: HU-10, luego HU-09, luego HU-08.
+Ninguna Should entró. Las tres pasaron a Won't en la versión 1.2 (ver abajo).
 
 ## Could
 
@@ -39,7 +33,7 @@ Prioridad entre Should: HU-10, luego HU-09, luego HU-08.
 |----------|-------|
 | HU-11 Mapa con colores en la consola | 2 |
 
-Los Could no entran en el cálculo de horas.
+Los Could no entran en el cálculo de horas. HU-11 no se construyó.
 
 ## Won't (esta versión no)
 
@@ -48,6 +42,9 @@ Los Could no entran en el cálculo de horas.
 | Interfaz gráfica y ventana emergente de combate | El curso exige consola y no permite dependencias gráficas. El combate se muestra como una pantalla en la consola |
 | Guardar y cargar partidas | No agrega ninguna estructura evaluada y consume tiempo |
 | Monstruos con comportamientos distintos | Una sola persecución demuestra el pathfinding; más tipos no cambian las estructuras |
+| HU-08 Buscar entidad y ver el mejor puntaje | Era Should. No hubo tiempo después de los Must. Se prefirió entregar los Must completos y probados |
+| HU-09 Persecución con A* | Era Should. BFS ya encuentra el camino más corto en un mapa de 20x20; A* solo explora menos celdas |
+| HU-10 Combate con pregunta | Era Should. No es un mínimo del dominio. Sin él, la colisión es derrota directa, como ya decía la versión 1.0 |
 
 ## Orden de construcción
 
@@ -67,6 +64,14 @@ Los Could no entran en el cálculo de horas.
 
 No cambió la prioridad de ninguna historia. Cambió el orden de construcción: HU-06 (eventos) se adelantó antes que HU-05 (persecución), porque la cola de eventos es la misma que usará BFS. Así la cola ya está probada cuando llegue la persecución.
 
+## Avance en la Entrega final
+
+| Historia | Estado |
+|---|---|
+| HU-01 a HU-07 | Terminadas e integradas en `main.py` |
+| HU-08, HU-09, HU-10 | Won't |
+| HU-11 | No se construyó |
+
 ## Plan de contingencia
 
 Si mi capacidad se redujera a la mitad, unas 12 h:
@@ -83,3 +88,4 @@ Si mi capacidad se redujera a la mitad, unas 12 h:
 |---------|-------|-------------------------|---------|
 | 1.0 | 2026-10-06 | Versión inicial | Entrega 1 |
 | 1.1 | 2026-10-27 | Ninguna prioridad cambió. Se registra el avance y el orden real de construcción | HU-06 se construyó antes que HU-05 para tener lista la cola que usará BFS |
+| 1.2 | 2026-11-09 | HU-08, HU-09 y HU-10 pasan de Should a Won't | El tiempo alcanzó para los Must completos y probados, no para los Should. Se prefirió calidad a cantidad |

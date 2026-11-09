@@ -39,21 +39,21 @@ Como jugador, quiero ver los eventos de cada turno, para entender qué pasó.
 ## HU-07 Victoria y derrota (F-07)
 Como jugador, quiero que el juego detecte si gané o perdí, para saber cuándo termina la partida.
 - CA-17: Si recojo todos los tesoros, la partida termina con victoria.
-- CA-18: Si un monstruo ocupa mi celda, la partida termina con derrota. Si HU-10 entra, este criterio cambia: la derrota llega cuando la vida es 0 (ver CA-28).
+- CA-18: Si un monstruo ocupa mi celda, la partida termina con derrota.
 
-## HU-08 Buscar entidad y consultar puntajes (F-08)
+## HU-08 Buscar entidad y consultar puntajes (F-08) · Won't
 Como jugador, quiero buscar una entidad por su identificador y ver el mejor puntaje, para consultar datos rápido.
 - CA-19: Buscar un identificador existente devuelve la entidad con su posición.
 - CA-20: Buscar un identificador inexistente avisa que no existe, sin error.
 - CA-21: Consultar el mejor puntaje devuelve el máximo registrado.
 - CA-22: Consultar el mejor puntaje sin puntajes avisa que no hay registros.
 
-## HU-09 Persecución con A* (mejora de F-05)
+## HU-09 Persecución con A* (mejora de F-05) · Won't
 Como jugador, quiero que los monstruos calculen su ruta con A*, para que el juego responda rápido en mapas grandes.
 - CA-23: La ruta encontrada por A* tiene el mismo largo que la de la búsqueda en anchura.
 - CA-24: En el mismo mapa, A* explora igual o menos celdas que la búsqueda en anchura.
 
-## HU-10 Combate con pregunta de cultura general (extiende F-05 y F-07)
+## HU-10 Combate con pregunta de cultura general (extiende F-05 y F-07) · Won't
 Como jugador, quiero responder una pregunta de cultura general cuando un monstruo me alcanza, para vencerlo con conocimiento en lugar de perder al instante.
 - CA-25: Cuando un monstruo ocupa la celda del jugador, se muestra una pantalla de combate en la consola con una pregunta y sus opciones.
 - CA-26: Si el jugador responde bien, el monstruo desaparece del mapa.
@@ -67,3 +67,4 @@ Como jugador, quiero responder una pregunta de cultura general cuando un monstru
 |---|---|---|---|
 | 1.0 | 2026-10-06 | Versión inicial | Entrega 1 |
 | 1.1 | 2026-10-27 | Se agrega este historial de cambios | Registrar los cambios futuros, como el de CA-18 si entra HU-10 |
+| 1.2 | 2026-11-09 | HU-08, HU-09 y HU-10 se marcan como Won't. CA-18 queda solo como derrota directa | Ver `moscow.md` 1.2 |
