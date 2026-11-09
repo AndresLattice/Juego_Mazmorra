@@ -70,6 +70,9 @@ def main():
         dibujar(partida)
         for evento in partida.eventos_del_turno():
             print("-", evento)
+        if partida.estado != "jugando":
+            print("Fin de la partida:", partida.estado)
+            break
         comando = input("> ").strip().lower()
         if comando == "q":
             print("Hasta luego")

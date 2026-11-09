@@ -12,6 +12,7 @@ def partida_vacia():
     p.turnos = ListaCircular()
     p.turnos.agregar("jugador")
     p.jugador = (5, 5)
+    p.mapa.poner_objeto(19, 19, "tesoro")
     p.eventos.sacar_todos()
     return p
 
@@ -206,7 +207,11 @@ def test_eventos_de_recoger_en_orden():
     p.mapa.poner_objeto(5, 6, "espada")
     p.agregar_monstruo(Monstruo("Monstruo 1", (5, 6)))
     p.mover("derecha")
-    assert p.eventos_del_turno() == ["Recogiste: espada", "Chocaste con un monstruo"]
+    assert p.eventos_del_turno() == [
+        "Recogiste: espada",
+        "Chocaste con un monstruo",
+        "Un monstruo te atrapó. Perdiste",
+    ]
 
 
 def test_turno_sin_eventos():
@@ -268,3 +273,48 @@ def test_chocar_con_muro_no_mueve_monstruos():
     p.agregar_monstruo(monstruo)
     p.mover("derecha")
     assert monstruo.posicion == (5, 9)
+
+
+# ---------- victoria y derrota ----------
+
+def test_recoger_todos_los_tesoros_gana():
+    """Verifica CA-17: al recoger el último tesoro la partida termina con victoria."""
+    p = partida_vacia()
+    p.mapa.quitar_objeto(19, 19)
+    p.mapa.poner_objeto(5, 6, "tesoro")
+    p.mover("derecha")
+    assert p.estado == "victoria"
+
+
+def test_queda_un_tesoro_sigue_jugando():
+    """Verifica CA-17: si queda un tesoro en el mapa, la partida sigue."""
+    p = partida_vacia()
+    p.mapa.poner_objeto(5, 6, "tesoro")
+    p.mover("derecha")
+    assert p.estado == "jugando"
+
+
+def test_monstruo_alcanza_al_jugador_pierde():
+    """Verifica CA-18: si un monstruo llega a la celda del jugador, se pierde."""
+    p = partida_vacia()
+    p.agregar_monstruo(Monstruo("Monstruo 1", (5, 7)))
+    p.esperar()
+    assert p.estado == "jugando"
+    p.esperar()
+    assert p.estado == "derrota"
+
+
+def test_jugador_pisa_monstruo_pierde():
+    """Verifica CA-18: si el jugador entra a la celda de un monstruo, se pierde."""
+    p = partida_vacia()
+    p.agregar_monstruo(Monstruo("Monstruo 1", (5, 6)))
+    p.mover("derecha")
+    assert p.estado == "derrota"
+
+
+def test_no_se_puede_actuar_al_terminar():
+    """Verifica CA-18: después de perder las acciones no cambian nada."""
+    p = partida_vacia()
+    p.estado = "derrota"
+    assert p.mover("derecha") == "La partida terminó"
+    assert p.jugador == (5, 5)

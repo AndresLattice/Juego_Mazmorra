@@ -65,6 +65,7 @@ class Partida:
         self.monstruos = ListaEnlazada()
         self.turnos = ListaCircular()
         self.jugador = None
+        self.estado = "jugando"
 
         cantidad = FILAS * COLUMNAS * PORCENTAJE_OBSTACULOS // 100
         for _ in range(cantidad):
@@ -90,6 +91,8 @@ class Partida:
 
         Si la celda tiene un objeto, lo recoge.
         """
+        if self.estado != "jugando":
+            return "La partida terminó"
         cambio_fila, cambio_columna = DIRECCIONES[direccion]
         fila = self.jugador[0] + cambio_fila
         columna = self.jugador[1] + cambio_columna
@@ -109,16 +112,20 @@ class Partida:
             self.eventos.registrar("Chocaste con un monstruo")
 
         self.historial.registrar(Accion("mover", desde, self.jugador, objeto))
-        self.mover_monstruos()
+        self.terminar_turno()
         return f"Te moviste hacia {direccion}"
 
     def esperar(self):
         """El jugador no hace nada y los monstruos se mueven."""
-        self.mover_monstruos()
+        if self.estado != "jugando":
+            return "La partida terminó"
+        self.terminar_turno()
         return "Esperaste un turno"
 
     def soltar(self, objeto):
         """Deja un objeto del inventario en la celda actual. O(n)."""
+        if self.estado != "jugando":
+            return "La partida terminó"
         fila, columna = self.jugador
         if self.mapa.objeto_en(fila, columna) is not None:
             return "Ya hay un objeto en esta celda"
@@ -128,18 +135,46 @@ class Partida:
             return f"No tienes: {objeto}"
         self.mapa.poner_objeto(fila, columna, objeto)
         self.historial.registrar(Accion("soltar", objeto=objeto))
-        self.mover_monstruos()
+        self.terminar_turno()
         return f"Soltaste: {objeto}"
 
     def usar(self, objeto):
         """Usa un objeto del inventario y lo consume. O(n)."""
+        if self.estado != "jugando":
+            return "La partida terminó"
         try:
             self.inventario.quitar(objeto)
         except ValueError:
             return f"No tienes: {objeto}"
         self.historial.registrar(Accion("usar", objeto=objeto))
-        self.mover_monstruos()
+        self.terminar_turno()
         return f"Usaste: {objeto}"
+
+    # ---------- fin del turno ----------
+
+    def terminar_turno(self):
+        """Revisa el fin de la partida y, si sigue, mueve a los monstruos."""
+        self.revisar_fin()
+        if self.estado == "jugando":
+            self.mover_monstruos()
+            self.revisar_fin()
+
+    def revisar_fin(self):
+        """Cambia el estado a victoria o derrota si corresponde. O(f·c)."""
+        if not self.quedan_tesoros():
+            self.estado = "victoria"
+            self.eventos.registrar("Recogiste todos los tesoros. ¡Ganaste!")
+        elif self.hay_monstruo(self.jugador[0], self.jugador[1]):
+            self.estado = "derrota"
+            self.eventos.registrar("Un monstruo te atrapó. Perdiste")
+
+    def quedan_tesoros(self):
+        """Indica si queda algún tesoro en el mapa. O(f·c)."""
+        for fila in range(self.mapa.filas):
+            for columna in range(self.mapa.columnas):
+                if self.mapa.objeto_en(fila, columna) == "tesoro":
+                    return True
+        return False
 
     # ---------- monstruos ----------
 
@@ -170,6 +205,8 @@ class Partida:
 
     def deshacer(self):
         """Revierte la última acción con sus efectos. O(n)."""
+        if self.estado != "jugando":
+            return "La partida terminó"
         try:
             accion = self.historial.deshacer()
         except PilaVaciaError:
@@ -191,6 +228,8 @@ class Partida:
 
     def rehacer(self):
         """Vuelve a aplicar la última acción deshecha. O(n)."""
+        if self.estado != "jugando":
+            return "La partida terminó"
         try:
             accion = self.historial.rehacer()
         except PilaVaciaError:
