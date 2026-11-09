@@ -13,3 +13,10 @@
 - Qué se me dificultó: Que deshacer y rehacer devolvieran también los efectos de cada acción, como volver a poner en el mapa un objeto recogido. Para eso cada acción se guarda con lo necesario para revertirla.
 - En qué usé IA: Para revisar las specs contra la rúbrica, simplificarlas, completar los métodos que faltaban en la lista enlazada de Clase, escribir el código de la partida y del menú, y escribir las pruebas. Revisé cada commit antes de aprobarlo.
 - Código reutilizado de Clase: `ListaEnlazada` de `Clase/semana_06` y `ColaEnlazada` de `Clase/semana_09`. Detalle en el `plan.md` de cada componente.
+
+## Entrega final
+
+- Qué hice: Escribí las specs de turnos, rutas y partida antes del código. Adapté la lista circular de Clase para los turnos, hice BFS para que los monstruos persigan al jugador y agregué victoria y derrota. Con eso el juego ya se puede ganar y perder. Pasé HU-08, HU-09 y HU-10 a Won't y saqué la tabla hash y el montículo, para entregar completos y probados los mínimos del dominio. Armé `CAMBIOS.md` como resumen de todo lo que cambió.
+- Qué se me dificultó: El tiempo. Me quedaron pocos días para la entrega final y tuve que elegir entre hacer todo o hacer bien lo obligatorio. También entender cómo BFS reconstruye el camino con la matriz de padres.
+- En qué usé IA: Para planear los commits, escribir las specs, el código de BFS, la persecución y el fin de partida, y sus pruebas. También para el análisis final, la trazabilidad y un borrador del informe. Revisé cada commit antes de aprobarlo.
+- Código reutilizado de Clase: `ListaCircular` de `Clase/semana_07`. Detalle en `specs/05-turnos/plan.md`.

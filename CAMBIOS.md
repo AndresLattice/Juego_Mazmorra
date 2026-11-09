@@ -31,7 +31,9 @@ Vista general para la sustentación. El detalle de cada punto está en el archiv
 | `03-inventario/plan.md` | 1.1 | Se declara lo que se quitó de la lista de Clase |
 | `07-partida/spec.md` | 1.0 | La partida existía desde la Entrega 2 sin spec propia |
 | `99-sistema/spec.md` | 0.2 | Estado de la Entrega 2 |
+| | 1.0 | Versión final: 7 componentes y el turno paso a paso |
 | `trazabilidad.md` | 2.0 | Trazabilidad en ambos sentidos |
+| | 3.0 | Se agregan CA-13, CA-14, CA-17 y CA-18 |
 
 ## Decisiones de diseño que te pueden preguntar
 
