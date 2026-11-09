@@ -19,9 +19,15 @@ Se lee en dos sentidos: de criterio a prueba y código, y de código a criterio.
 | CA-11 | tests/test_historial.py::test_deshacer_sin_historial, tests/test_partida.py::test_deshacer_sin_historial_avisa | dominio/partida.py `deshacer` |
 | CA-12 | tests/test_historial.py::test_rehacer_devuelve_deshecha, tests/test_partida.py::test_rehacer_mover, test_rehacer_sin_deshacer_avisa | dominio/historial.py `rehacer`, dominio/partida.py `rehacer` |
 | CA-15 | tests/test_eventos.py::test_eventos_en_orden, tests/test_partida.py::test_eventos_de_recoger_en_orden, test_aparicion_de_monstruos_al_iniciar | dominio/eventos.py, dominio/partida.py |
+| CA-13 | tests/test_rutas.py::test_siguiente_paso_ruta_mas_corta, test_siguiente_paso_rodea_muro, test_siguiente_paso_vecino, test_misma_celda_devuelve_none, test_mapa_de_una_fila, tests/test_partida.py::test_monstruo_avanza_una_casilla, test_cada_monstruo_avanza_en_su_turno | dominio/rutas.py `siguiente_paso`, dominio/partida.py `mover_monstruos` |
+| CA-14 | tests/test_rutas.py::test_sin_ruta_devuelve_none, tests/test_partida.py::test_monstruo_sin_ruta_se_queda_quieto | dominio/rutas.py `siguiente_paso`, dominio/partida.py `mover_monstruos` |
 | CA-16 | tests/test_partida.py::test_turno_sin_eventos | dominio/partida.py `eventos_del_turno` |
+| CA-17 | tests/test_partida.py::test_recoger_todos_los_tesoros_gana, test_queda_un_tesoro_sigue_jugando | dominio/partida.py `revisar_fin`, `quedan_tesoros` |
+| CA-18 | tests/test_partida.py::test_monstruo_alcanza_al_jugador_pierde, test_jugador_pisa_monstruo_pierde, test_no_se_puede_actuar_al_terminar | dominio/partida.py `revisar_fin`, `terminar_turno` |
 
-CA-13, CA-14 y CA-17 a CA-29 son de historias que entran después de la Entrega 2.
+CA-04 también se verifica con tests/test_partida.py::test_chocar_con_muro_no_mueve_monstruos.
+
+CA-19 a CA-29 son de HU-08, HU-09 y HU-10, que pasaron a Won't.
 
 ## Pruebas de soporte
 
@@ -33,8 +39,10 @@ Prueban las estructuras por dentro. Su docstring dice «Soporte de CA-XX».
 | tests/test_mapa.py | dominio/mapa.py | CA-01, CA-03, CA-04, CA-05, CA-07 |
 | tests/test_lista_enlazada.py | estructuras/lista_enlazada.py | CA-05, CA-06, CA-07 |
 | tests/test_inventario.py | dominio/inventario.py | CA-05, CA-06, CA-07 |
-| tests/test_cola.py | estructuras/cola.py | CA-15, CA-16 |
+| tests/test_cola.py | estructuras/cola.py | CA-15, CA-16; también la usa BFS (CA-13, CA-14) |
+| estructuras/lista_circular.py | CA-13 |
 | tests/test_eventos.py | dominio/eventos.py | CA-15, CA-16 |
+| tests/test_lista_circular.py | estructuras/lista_circular.py | CA-13 |
 
 ## De código a criterio
 
@@ -43,13 +51,15 @@ Prueban las estructuras por dentro. Su docstring dice «Soporte de CA-XX».
 | estructuras/nodo.py | base de pila, lista enlazada y cola |
 | estructuras/pila.py | CA-08, CA-10, CA-11, CA-12 |
 | estructuras/lista_enlazada.py | CA-05, CA-06, CA-07; también guarda los monstruos (CA-02) |
-| estructuras/cola.py | CA-15, CA-16 |
+| estructuras/cola.py | CA-15, CA-16; también la usa BFS (CA-13, CA-14) |
+| estructuras/lista_circular.py | CA-13 |
 | dominio/mapa.py | CA-01, CA-03, CA-04, CA-05, CA-07 |
 | dominio/inventario.py | CA-05, CA-06, CA-07 |
 | dominio/historial.py | CA-08, CA-10, CA-11, CA-12 |
 | dominio/eventos.py | CA-15, CA-16 |
-| dominio/partida.py | CA-01 a CA-05, CA-07 a CA-12, CA-15, CA-16 |
-| main.py | CA-06 (mensaje de inventario vacío), muestra los mensajes de todos los demás |
+| dominio/rutas.py | CA-13, CA-14 |
+| dominio/partida.py | CA-01 a CA-05, CA-07 a CA-18 |
+| main.py | CA-06 (mensaje de inventario vacío), CA-17 y CA-18 (muestra el fin), y los mensajes de los demás |
 
 ## Historial de cambios
 
@@ -57,3 +67,4 @@ Prueban las estructuras por dentro. Su docstring dice «Soporte de CA-XX».
 |---|---|---|---|
 | 1.0 | 2026-10-06 | Tabla del componente historial | Entrega 1 |
 | 2.0 | 2026-10-27 | Se cubren mapa, inventario, eventos y partida, en ambos sentidos | Entrega 2 |
+| 3.0 | 2026-11-09 | Se agregan CA-13, CA-14, CA-17 y CA-18, lista circular y rutas | Entrega final |
