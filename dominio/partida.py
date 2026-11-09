@@ -9,6 +9,8 @@ from dominio.eventos import Eventos
 from dominio.historial import Historial
 from dominio.inventario import Inventario
 from dominio.mapa import Mapa
+from dominio.rutas import siguiente_paso
+from estructuras.lista_circular import ListaCircular
 from estructuras.lista_enlazada import ListaEnlazada
 from estructuras.pila import PilaVaciaError
 
@@ -42,6 +44,14 @@ class Accion:
         self.objeto = objeto
 
 
+class Monstruo:
+    """Un monstruo con su nombre y su posición."""
+
+    def __init__(self, nombre, posicion):
+        self.nombre = nombre
+        self.posicion = posicion
+
+
 class Partida:
     """Estado de una partida en curso."""
 
@@ -53,6 +63,7 @@ class Partida:
         self.historial = Historial()
         self.eventos = Eventos()
         self.monstruos = ListaEnlazada()
+        self.turnos = ListaCircular()
         self.jugador = None
 
         cantidad = FILAS * COLUMNAS * PORCENTAJE_OBSTACULOS // 100
@@ -61,11 +72,12 @@ class Partida:
             self.mapa.poner_obstaculo(fila, columna)
 
         self.jugador = self._celda_libre_al_azar()
+        self.turnos.agregar("jugador")
 
-        for _ in range(CANTIDAD_MONSTRUOS):
-            posicion = self._celda_libre_al_azar()
-            self.monstruos.insertar(0, posicion)
-            self.eventos.registrar(f"Apareció un monstruo en {posicion}")
+        for numero in range(1, CANTIDAD_MONSTRUOS + 1):
+            monstruo = Monstruo(f"Monstruo {numero}", self._celda_libre_al_azar())
+            self.agregar_monstruo(monstruo)
+            self.eventos.registrar(f"Apareció {monstruo.nombre} en {monstruo.posicion}")
 
         for objeto in OBJETOS_INICIALES:
             fila, columna = self._celda_libre_al_azar()
@@ -93,14 +105,16 @@ class Partida:
         if objeto is not None:
             self.inventario.agregar(objeto)
             self.eventos.registrar(f"Recogiste: {objeto}")
-        if self.monstruos.buscar(self.jugador) != -1:
+        if self.hay_monstruo(fila, columna):
             self.eventos.registrar("Chocaste con un monstruo")
 
         self.historial.registrar(Accion("mover", desde, self.jugador, objeto))
+        self.mover_monstruos()
         return f"Te moviste hacia {direccion}"
 
     def esperar(self):
-        """El jugador no hace nada en este turno. O(1)."""
+        """El jugador no hace nada y los monstruos se mueven."""
+        self.mover_monstruos()
         return "Esperaste un turno"
 
     def soltar(self, objeto):
@@ -114,6 +128,7 @@ class Partida:
             return f"No tienes: {objeto}"
         self.mapa.poner_objeto(fila, columna, objeto)
         self.historial.registrar(Accion("soltar", objeto=objeto))
+        self.mover_monstruos()
         return f"Soltaste: {objeto}"
 
     def usar(self, objeto):
@@ -123,7 +138,33 @@ class Partida:
         except ValueError:
             return f"No tienes: {objeto}"
         self.historial.registrar(Accion("usar", objeto=objeto))
+        self.mover_monstruos()
         return f"Usaste: {objeto}"
+
+    # ---------- monstruos ----------
+
+    def agregar_monstruo(self, monstruo):
+        """Pone al monstruo en el mapa y en el orden de turnos. O(1)."""
+        self.monstruos.insertar(0, monstruo)
+        self.turnos.agregar(monstruo)
+
+    def mover_monstruos(self):
+        """Da un turno a cada monstruo hasta volver al jugador. O(m · f·c)."""
+        monstruo = self.turnos.avanzar()
+        while monstruo != "jugador":
+            paso = siguiente_paso(self.mapa, monstruo.posicion, self.jugador)
+            if paso is not None and not self.hay_monstruo(paso[0], paso[1]):
+                monstruo.posicion = paso
+                if paso == self.jugador:
+                    self.eventos.registrar(f"{monstruo.nombre} te alcanzó")
+            monstruo = self.turnos.avanzar()
+
+    def hay_monstruo(self, fila, columna):
+        """Indica si algún monstruo está en la celda. O(m)."""
+        for monstruo in self.monstruos:
+            if monstruo.posicion == (fila, columna):
+                return True
+        return False
 
     # ---------- deshacer y rehacer ----------
 
@@ -187,7 +228,7 @@ class Partida:
             return False
         if self.jugador == (fila, columna):
             return False
-        if self.monstruos.buscar((fila, columna)) != -1:
+        if self.hay_monstruo(fila, columna):
             return False
         return True
 

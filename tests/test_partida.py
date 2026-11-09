@@ -1,5 +1,6 @@
 from dominio.mapa import Mapa
-from dominio.partida import FILAS, COLUMNAS, Partida
+from dominio.partida import FILAS, COLUMNAS, Monstruo, Partida
+from estructuras.lista_circular import ListaCircular
 from estructuras.lista_enlazada import ListaEnlazada
 
 
@@ -8,6 +9,8 @@ def partida_vacia():
     p = Partida(semilla=1)
     p.mapa = Mapa(FILAS, COLUMNAS)
     p.monstruos = ListaEnlazada()
+    p.turnos = ListaCircular()
+    p.turnos.agregar("jugador")
     p.jugador = (5, 5)
     p.eventos.sacar_todos()
     return p
@@ -34,7 +37,7 @@ def test_partida_nueva_celdas_distintas():
     assert p.monstruos.tamaño() >= 2
     ocupadas = [p.jugador]
     for m in p.monstruos:
-        ocupadas.append(m)
+        ocupadas.append(m.posicion)
     for f, c in ocupadas:
         assert not p.mapa.es_obstaculo(f, c)
         assert p.mapa.objeto_en(f, c) is None
@@ -201,7 +204,7 @@ def test_eventos_de_recoger_en_orden():
     """Verifica CA-15: los eventos del turno salen en orden."""
     p = partida_vacia()
     p.mapa.poner_objeto(5, 6, "espada")
-    p.monstruos.insertar(0, (5, 6))
+    p.agregar_monstruo(Monstruo("Monstruo 1", (5, 6)))
     p.mover("derecha")
     assert p.eventos_del_turno() == ["Recogiste: espada", "Chocaste con un monstruo"]
 
@@ -218,4 +221,50 @@ def test_aparicion_de_monstruos_al_iniciar():
     p = Partida(semilla=7)
     eventos = p.eventos_del_turno()
     assert len(eventos) == 2
-    assert eventos[0].startswith("Apareció un monstruo")
+    assert eventos[0].startswith("Apareció Monstruo")
+
+
+# ---------- monstruos ----------
+
+def test_monstruo_avanza_una_casilla():
+    """Verifica CA-13: en su turno el monstruo avanza una casilla hacia el jugador."""
+    p = partida_vacia()
+    monstruo = Monstruo("Monstruo 1", (5, 9))
+    p.agregar_monstruo(monstruo)
+    p.esperar()
+    assert monstruo.posicion == (5, 8)
+
+
+def test_cada_monstruo_avanza_en_su_turno():
+    """Verifica CA-13: todos los monstruos se mueven en el mismo turno."""
+    p = partida_vacia()
+    m1 = Monstruo("Monstruo 1", (5, 9))
+    m2 = Monstruo("Monstruo 2", (9, 5))
+    p.agregar_monstruo(m1)
+    p.agregar_monstruo(m2)
+    p.esperar()
+    assert m1.posicion == (5, 8)
+    assert m2.posicion == (8, 5)
+
+
+def test_monstruo_sin_ruta_se_queda_quieto():
+    """Verifica CA-14: si no hay ruta al jugador, el monstruo no se mueve."""
+    p = partida_vacia()
+    p.mapa.poner_obstaculo(4, 5)
+    p.mapa.poner_obstaculo(6, 5)
+    p.mapa.poner_obstaculo(5, 4)
+    p.mapa.poner_obstaculo(5, 6)
+    monstruo = Monstruo("Monstruo 1", (0, 0))
+    p.agregar_monstruo(monstruo)
+    p.esperar()
+    assert monstruo.posicion == (0, 0)
+
+
+def test_chocar_con_muro_no_mueve_monstruos():
+    """Verifica CA-04: si el jugador no se pudo mover, no pasa el turno."""
+    p = partida_vacia()
+    p.mapa.poner_obstaculo(5, 6)
+    monstruo = Monstruo("Monstruo 1", (5, 9))
+    p.agregar_monstruo(monstruo)
+    p.mover("derecha")
+    assert monstruo.posicion == (5, 9)

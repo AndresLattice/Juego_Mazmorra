@@ -23,7 +23,7 @@ def dibujar(partida):
         for columna in range(partida.mapa.columnas):
             if partida.jugador == (fila, columna):
                 linea += "@ "
-            elif partida.monstruos.buscar((fila, columna)) != -1:
+            elif partida.hay_monstruo(fila, columna):
                 linea += "M "
             elif partida.mapa.es_obstaculo(fila, columna):
                 linea += "# "
