@@ -204,12 +204,12 @@ def test_accion_nueva_borra_rehacer():
 def test_eventos_de_recoger_en_orden():
     """Verifica CA-15: los eventos del turno salen en orden."""
     p = partida_vacia()
-    p.mapa.poner_objeto(5, 6, "espada")
+    p.mapa.poner_objeto(5, 6, "poción")
     p.agregar_monstruo(Monstruo("Monstruo 1", (5, 6)))
     p.mover("derecha")
     assert p.eventos_del_turno() == [
-        "Recogiste: espada",
-        "Chocaste con un monstruo",
+        "Recogiste: poción",
+        "Chocaste con Monstruo 1",
         "Un monstruo te atrapó. Perdiste",
     ]
 
@@ -318,3 +318,50 @@ def test_no_se_puede_actuar_al_terminar():
     p.estado = "derrota"
     assert p.mover("derecha") == "La partida terminó"
     assert p.jugador == (5, 5)
+
+
+# ---------- pelea con espada ----------
+
+def test_pisar_monstruo_con_espada_lo_mata():
+    """Verifica CA-30: con espada, pisar a un monstruo lo mata y la partida sigue."""
+    p = partida_vacia()
+    p.inventario.agregar("espada")
+    monstruo = Monstruo("Monstruo 1", (5, 6))
+    p.agregar_monstruo(monstruo)
+    p.mover("derecha")
+    assert p.estado == "jugando"
+    assert p.inventario.esta_vacio()
+    assert monstruo.posicion != (5, 6)
+
+
+def test_monstruo_alcanza_jugador_con_espada():
+    """Verifica CA-30: con espada, el monstruo que te alcanza muere."""
+    p = partida_vacia()
+    p.inventario.agregar("espada")
+    p.agregar_monstruo(Monstruo("Monstruo 1", (5, 6)))
+    p.esperar()
+    assert p.estado == "jugando"
+    assert p.inventario.esta_vacio()
+
+
+def test_espada_sirve_una_sola_vez():
+    """Verifica CA-30: la espada se gasta; el siguiente choque es derrota."""
+    p = partida_vacia()
+    p.inventario.agregar("espada")
+    p.agregar_monstruo(Monstruo("Monstruo 1", (5, 6)))
+    p.agregar_monstruo(Monstruo("Monstruo 2", (5, 4)))
+    p.esperar()
+    assert p.estado == "derrota"
+
+
+def test_monstruo_muerto_reaparece_en_celda_libre():
+    """Verifica CA-31: el monstruo muerto reaparece en una celda libre."""
+    p = partida_vacia()
+    p.inventario.agregar("espada")
+    monstruo = Monstruo("Monstruo 1", (5, 6))
+    p.agregar_monstruo(monstruo)
+    p.mover("derecha")
+    fila, columna = monstruo.posicion
+    assert monstruo.posicion != p.jugador
+    assert not p.mapa.es_obstaculo(fila, columna)
+    assert p.mapa.objeto_en(fila, columna) is None

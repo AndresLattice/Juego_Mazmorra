@@ -108,8 +108,10 @@ class Partida:
         if objeto is not None:
             self.inventario.agregar(objeto)
             self.eventos.registrar(f"Recogiste: {objeto}")
-        if self.hay_monstruo(fila, columna):
-            self.eventos.registrar("Chocaste con un monstruo")
+        for monstruo in self.monstruos:
+            if monstruo.posicion == self.jugador:
+                self.eventos.registrar(f"Chocaste con {monstruo.nombre}")
+                self.pelear(monstruo)
 
         self.historial.registrar(Accion("mover", desde, self.jugador, objeto))
         self.terminar_turno()
@@ -192,7 +194,21 @@ class Partida:
                 monstruo.posicion = paso
                 if paso == self.jugador:
                     self.eventos.registrar(f"{monstruo.nombre} te alcanzó")
+                    self.pelear(monstruo)
             monstruo = self.turnos.avanzar()
+
+    def pelear(self, monstruo):
+        """Si el jugador tiene espada, el monstruo muere y reaparece. O(n + f·c).
+
+        Si no tiene espada no pasa nada aquí: revisar_fin declara la derrota.
+        """
+        try:
+            self.inventario.quitar("espada")
+        except ValueError:
+            return
+        monstruo.posicion = self._celda_libre_al_azar()
+        self.eventos.registrar(f"Mataste a {monstruo.nombre} con la espada")
+        self.eventos.registrar(f"Apareció {monstruo.nombre} en {monstruo.posicion}")
 
     def hay_monstruo(self, fila, columna):
         """Indica si algún monstruo está en la celda. O(m)."""
