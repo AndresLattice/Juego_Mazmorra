@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Informe final: Juego de mazmorra</title>
+<style>
+  @page { size: Letter; margin: 2.5cm; }
+  body { font-family: "DejaVu Serif", Georgia, serif; font-size: 11.5pt; line-height: 1.5; color: #111; }
+  h1 { font-size: 20pt; margin: 0 0 .4em; }
+  h2 { font-size: 15pt; margin: 1.4em 0 .4em; border-bottom: 1px solid #999; padding-bottom: .15em; }
+  h3 { font-size: 12.5pt; margin: 1.1em 0 .3em; }
+  p { margin: .45em 0; text-align: justify; }
+  table { border-collapse: collapse; width: 100%; margin: .6em 0; font-size: 10pt; }
+  th, td { border: 1px solid #888; padding: 4px 6px; text-align: left; vertical-align: top; }
+  th { background: #e8e8e8; }
+  code, pre { font-family: "DejaVu Sans Mono", monospace; font-size: 9.5pt; }
+  pre { background: #f4f4f4; border: 1px solid #ccc; padding: 8px; line-height: 1.3; }
+  .portada { height: 22cm; display: flex; flex-direction: column; justify-content: center; text-align: center; page-break-after: always; }
+  .portada p { text-align: center; margin: .3em 0; }
+  .salto { page-break-before: always; }
+  .ref p { padding-left: 2em; text-indent: -2em; }
+  figcaption { font-size: 10pt; text-align: center; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="portada">
+  <p>Universidad Cooperativa de Colombia</p>
+  <p>Facultad de Ingeniería · Ingeniería de Software</p>
+  <p style="margin-top:3em">Estructuras de Datos · ID 706132</p>
+  <h1 style="margin-top:1.5em">Juego de mazmorra:<br>motor 2D con pathfinding</h1>
+  <p>Proyecto integrador · Temática A · Informe técnico final</p>
+  <p style="margin-top:3em">Andres Agudelo</p>
+  <p style="margin-top:3em">11 de noviembre de 2026</p>
+</div>
+
+<h2>1. Descripción del sistema</h2>
+<p>El proyecto es el núcleo lógico de un juego por turnos que se juega en la consola. Un aventurero recorre una mazmorra de 20x20 celdas, con un 15 % de obstáculos puestos al azar, y debe recoger tres tesoros. Dos monstruos lo persiguen: en cada turno calculan el camino más corto hacia el jugador y avanzan una casilla. El jugador gana si recoge todos los tesoros y pierde si un monstruo llega a su celda, salvo que tenga una espada: en ese caso el monstruo muere, reaparece en otra parte del mapa y la espada se gasta.</p>
+<p>Además de moverse, el jugador puede recoger, usar y soltar objetos, consultar su inventario, y deshacer o rehacer sus jugadas con todos sus efectos: si deshace la recogida de un objeto, el objeto vuelve al mapa. Lo que pasa en cada turno (aparición de monstruos, recolecciones, colisiones, victoria y derrota) se muestra como eventos en el mismo orden en que ocurrió.</p>
+<p>El sistema cubre las siete historias Must del producto (HU-01 a HU-07) y la historia HU-12 (pelear con la espada), con 20 criterios de aceptación verificados por 156 pruebas automáticas.</p>
+
+<h2>2. Arquitectura y diagrama de módulos</h2>
+<p>El código se divide en tres capas. <code>estructuras/</code> contiene una estructura de datos por módulo, sin lógica del juego. <code>dominio/</code> contiene la lógica del juego y usa esas estructuras. <code>main.py</code> es la interfaz de consola: lee comandos, llama a la partida y dibuja el mapa.</p>
+<figure>
+<pre>
+                         main.py  (consola)
+                            |
+                            v
+                   dominio/partida.py
+     +----------+---------+---------+----------+-----------+
+     |          |         |         |          |           |
+  mapa.py  inventario  historial  eventos   rutas.py   (turnos)
+     |       .py        .py        .py        |           |
+  matriz      |          |          |         | BFS       |
+  densa       v          v          v         v           v
+         lista_      pila.py     cola.py <---+    lista_circular.py
+         enlazada.py    |          |                     |
+             |          |          |                     |
+             +----------+----------+---------------------+
+                                  |
+                          estructuras/nodo.py
+</pre>
+<figcaption>Figura 1. Módulos del sistema y sus dependencias.</figcaption>
+</figure>
+<p>Un turno sigue siempre el mismo camino. La consola llama a una acción de la partida. La partida consulta el mapa; si la acción no se puede hacer, por ejemplo por un obstáculo, devuelve el motivo y el turno no pasa. Si se puede, actualiza mapa e inventario, guarda la acción en el historial y anota los eventos. Luego revisa victoria y derrota. Si la partida sigue, la lista circular de turnos le da el turno a cada monstruo, que pide su siguiente paso a las rutas. Al final la consola dibuja el mapa y muestra los eventos.</p>
+
+<h2>3. Cómo se aplicó Spec-Driven Development</h2>
+<p>Cada componente se especificó antes de programarse, en tres archivos dentro de <code>specs/</code>: <code>spec.md</code> describe qué hace (operaciones, errores, criterios y casos extremos), <code>plan.md</code> explica cómo (estructura, complejidad y alternativa descartada) y <code>tasks.md</code> lista las tareas y el criterio que cierra cada una. El historial de Git lo muestra: en cada entrega, el commit de specs aparece antes que el de código.</p>
+<p>Cada criterio de aceptación tiene un identificador (CA-01 a CA-18, CA-30 y CA-31) y cada prueba dice en su docstring qué criterio verifica. El archivo <code>specs/trazabilidad.md</code> permite ir del criterio a la prueba y al código, y también del código al criterio.</p>
+
+<h3>Specs que cambiaron y por qué</h3>
+<table>
+<tr><th>Archivo</th><th>Cambio</th><th>Motivo</th></tr>
+<tr><td>01-historial/spec.md 1.2</td><td>Deshacer sin historial avisa, sin error</td><td>La versión anterior decía que lanzaba un error y contradecía a la historia HU-04</td></tr>
+<tr><td>02-mapa/spec.md 1.1</td><td>Se agrega <code>objeto_en</code></td><td>La consola necesita leer cada celda para dibujar el mapa</td></tr>
+<tr><td>07-partida/spec.md 1.0</td><td>Spec nueva</td><td>La partida existía desde la Entrega 2 sin spec propia</td></tr>
+<tr><td>moscow.md 1.2</td><td>HU-08, HU-09 y HU-10 pasan de Should a Won't</td><td>El tiempo alcanzó para los Must completos y probados</td></tr>
+<tr><td>estructuras.md 1.2</td><td>Salen la tabla hash y el montículo</td><td>Solo los usaban las historias que pasaron a Won't</td></tr>
+<tr><td>historias.md 1.3 y 07-partida/spec.md 1.1</td><td>Nueva HU-12: pelear con la espada</td><td>Darle uso a la espada con poco código, sin estructuras nuevas</td></tr>
+</table>
+<p>El cambio más importante fue el último. Al final del proyecto había que elegir entre construir las ocho estructuras previstas o entregar bien probadas las que resuelven los mínimos del dominio. Se eligió lo segundo y la decisión quedó registrada con su motivo, como permite la metodología.</p>
+
+<h2 class="salto">4. Estructuras de datos</h2>
+
+<h3>4.1 Dos pilas: historial de deshacer y rehacer</h3>
+<p><b>Qué es.</b> Una pila guarda elementos de forma que el último en entrar es el primero en salir. Se implementó sobre nodos enlazados, con el tope en la cabeza.</p>
+<p><b>Cómo se implementó.</b> <code>estructuras/pila.py</code> (adaptada del laboratorio de la semana 8) y <code>dominio/historial.py</code>. El historial tiene dos pilas: <code>hechas</code> y <code>deshechas</code>. Registrar hace push en hechas y vacía deshechas. Deshacer pasa la acción de hechas a deshechas, y rehacer hace lo contrario.</p>
+<p><b>Dónde se usa.</b> Cada acción del jugador se guarda como un objeto <code>Accion</code> con lo necesario para revertirla: posición anterior, posición nueva y objeto recogido o soltado.</p>
+<p><b>Complejidad.</b> Registrar, deshacer y rehacer son O(1).</p>
+<p><b>Alternativa descartada.</b> Lista doble con cursor. También es O(1), pero hay que mantener el cursor y cortar la lista en cada acción nueva.</p>
+
+<h3>4.2 Lista enlazada simple: inventario</h3>
+<p><b>Qué es.</b> Una cadena de nodos donde cada uno apunta al siguiente. Guarda referencias a la cabeza y a la cola.</p>
+<p><b>Cómo se implementó.</b> <code>estructuras/lista_enlazada.py</code>, adaptada del laboratorio de la semana 6. Se completaron los dos métodos que el laboratorio dejaba sin terminar: insertar en medio y eliminar un nodo que no es el primero. <code>dominio/inventario.py</code> agrega al inicio y quita buscando el objeto por nombre.</p>
+<p><b>Dónde se usa.</b> En el inventario del jugador y para guardar a los monstruos de la partida. En la pelea, la espada se quita del inventario con la misma operación <code>quitar</code>.</p>
+<p><b>Complejidad.</b> Agregar O(1); quitar y listar O(n).</p>
+<p><b>Alternativa descartada.</b> Arreglo dinámico. Buscar por nombre cuesta O(n) en ambas, pero el arreglo además debe correr los elementos al quitar uno del medio, y el juego nunca usa el acceso por posición.</p>
+
+<h3>4.3 Cola enlazada: eventos y BFS</h3>
+<p><b>Qué es.</b> Una estructura donde el primero en entrar es el primero en salir. Se encola por la cola y se desencola por la cabeza.</p>
+<p><b>Cómo se implementó.</b> <code>estructuras/cola.py</code>, la <code>ColaEnlazada</code> del laboratorio de la semana 9. <code>dominio/eventos.py</code> registra cada evento como texto y los saca todos en orden al final del turno.</p>
+<p><b>Dónde se usa.</b> En los eventos del turno y, como estructura auxiliar, en la búsqueda en anchura de las rutas.</p>
+<p><b>Complejidad.</b> Encolar y desencolar O(1); sacar todos O(n).</p>
+<p><b>Alternativa descartada.</b> Cola de prioridad: insertar cuesta O(log n) y ningún evento es más urgente que otro.</p>
+
+<h3>4.4 Lista circular: orden de turnos</h3>
+<p><b>Qué es.</b> Una lista enlazada donde el último nodo apunta al primero, así que recorrerla no tiene fin.</p>
+<p><b>Cómo se implementó.</b> <code>estructuras/lista_circular.py</code>, adaptada del laboratorio de la semana 7. Guarda una referencia al nodo actual; avanzar es <code>actual = actual.siguiente</code>.</p>
+<p><b>Dónde se usa.</b> La partida agrega al jugador y a cada monstruo. Después de que el jugador actúa, se avanza por los monstruos hasta volver al jugador.</p>
+<p><b>Complejidad.</b> Agregar, consultar el actual y avanzar son O(1).</p>
+<p><b>Alternativa descartada.</b> Cola: cada turno exige desencolar y volver a encolar.</p>
+
+<h3>4.5 Grafo implícito con BFS: rutas de los monstruos</h3>
+<p><b>Qué es.</b> El mapa se ve como un grafo: cada celda sin obstáculo es un vértice y sus vecinos son las celdas libres de arriba, abajo, izquierda y derecha. Es implícito porque no se guarda una lista de aristas; los vecinos se calculan al momento. La búsqueda en anchura (BFS) recorre el grafo por capas de distancia.</p>
+<p><b>Cómo se implementó.</b> <code>dominio/rutas.py</code>, función <code>siguiente_paso</code>. Encola la celda del monstruo; mientras la cola no esté vacía, desencola una celda y encola sus vecinos no visitados, anotando en una matriz <code>padre</code> de dónde vino cada uno. Al llegar al jugador, camina hacia atrás por los padres hasta encontrar la primera celda del camino.</p>
+<p><b>Dónde se usa.</b> Cada monstruo la llama en su turno. Si no hay camino, el monstruo se queda quieto.</p>
+<p><b>Complejidad.</b> O(V + E). Con V = 400 celdas y como máximo 4 vecinos por celda, queda O(f·c).</p>
+<p><b>Alternativa descartada.</b> DFS cuesta lo mismo pero no garantiza el camino más corto, que es lo que pide CA-13. A* exploraría menos celdas, pero en un mapa de 20x20 la diferencia no se nota y se dejó fuera.</p>
+
+<h3>4.6 Matriz densa: mapa</h3>
+<p><b>Qué es.</b> Un arreglo de filas, donde cada fila es un arreglo de celdas.</p>
+<p><b>Cómo se implementó.</b> <code>dominio/mapa.py</code>. Cada celda guarda <code>None</code> si está libre, <code>"#"</code> si tiene obstáculo o el nombre del objeto. Las listas de Python se usan como arreglos de tamaño fijo: se crean una vez y no crecen.</p>
+<p><b>Dónde se usa.</b> En cada movimiento del jugador, en BFS, en la revisión de victoria y para dibujar.</p>
+<p><b>Complejidad.</b> Consultar y modificar una celda O(1); crear el mapa O(f·c).</p>
+<p><b>Alternativa descartada.</b> Matriz dispersa. Con un 15 % de obstáculos ahorra poca memoria y la consulta deja de ser O(1).</p>
+
+<h2 class="salto">5. Dificultades</h2>
+<p>La primera dificultad fue que deshacer y rehacer revirtieran también los efectos de cada acción. Se resolvió guardando en cada acción lo necesario para revertirla, en lugar de guardar solo su nombre.</p>
+<p>La segunda fue entender cómo BFS reconstruye el camino. BFS no guarda caminos completos: solo anota, para cada celda, desde qué celda se llegó. El camino se recupera caminando hacia atrás desde el destino.</p>
+<p>La tercera fue el tiempo. Al llegar a la entrega final quedaban pocos días y había que decidir entre construir todas las historias o terminar bien las obligatorias. Se priorizaron los Must y los Should pasaron a Won't con su motivo registrado.</p>
+
+<h2>6. Declaración de uso de inteligencia artificial</h2>
+<p>Se usó un asistente de IA (Claude) para organizar los artefactos SDD y la priorización MoSCoW, revisar las specs contra la rúbrica, simplificarlas, planear los commits, escribir parte del código (la partida, la consola, BFS, el fin de partida) y las pruebas, completar los métodos faltantes de la lista enlazada de Clase y preparar un borrador de este informe. Las estructuras base (nodo, pila, lista enlazada, lista circular y cola) parten de los laboratorios del curso. Cada commit fue revisado antes de aprobarlo, y el uso de IA también se declara en <code>BITACORA.md</code>.</p>
+
+<h2>7. Conclusiones</h2>
+<p>La estructura correcta depende de la operación que más se repite. El historial usa pilas porque siempre opera sobre lo más reciente; los eventos usan una cola porque importa el orden de llegada; los turnos usan una lista circular porque no tienen fin; el mapa usa una matriz porque se consulta por coordenadas.</p>
+<p>Una misma estructura puede servir para más de un problema. La cola de los eventos es la misma que usa BFS, y la lista enlazada guarda tanto el inventario como a los monstruos.</p>
+<p>Escribir la spec antes del código hizo visibles las preguntas difíciles a tiempo, como qué pasa al deshacer con el historial vacío. Y registrar los cambios con su motivo, incluido el recorte de alcance final, dejó claro qué se decidió y por qué.</p>
+
+<h2>8. Bibliografía</h2>
+<div class="ref">
+<p>Cormen, T. H., Leiserson, C. E., Rivest, R. L., &amp; Stein, C. (2022). <i>Introduction to algorithms</i> (4.ª ed.). MIT Press.</p>
+<p>Goodrich, M. T., Tamassia, R., &amp; Goldwasser, M. H. (2013). <i>Data structures and algorithms in Python</i>. Wiley.</p>
+<p>Python Software Foundation. (2024). <i>The Python tutorial</i>. https://docs.python.org/3/tutorial/</p>
+<p>Universidad Cooperativa de Colombia. (2026). <i>Proyecto integrador, temática A: Motor de juego 2D con pathfinding</i> [Documento técnico del curso Estructuras de Datos].</p>
+</div>
+
+</body>
+</html>
