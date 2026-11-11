@@ -39,7 +39,12 @@ Como jugador, quiero ver los eventos de cada turno, para entender qué pasó.
 ## HU-07 Victoria y derrota (F-07)
 Como jugador, quiero que el juego detecte si gané o perdí, para saber cuándo termina la partida.
 - CA-17: Si recojo todos los tesoros, la partida termina con victoria.
-- CA-18: Si un monstruo ocupa mi celda, la partida termina con derrota.
+- CA-18: Si un monstruo ocupa mi celda y no tengo espada, la partida termina con derrota.
+
+## HU-12 Pelear con la espada (extiende F-05 y F-07)
+Como jugador, quiero que la espada me salve cuando un monstruo me alcanza, para que recoger objetos tenga sentido.
+- CA-30: Si un monstruo ocupa mi celda y tengo una espada, el monstruo muere, la espada se gasta y la partida sigue.
+- CA-31: El monstruo que muere aparece de nuevo en otra celda libre del mapa.
 
 ## HU-08 Buscar entidad y consultar puntajes (F-08) · Won't
 Como jugador, quiero buscar una entidad por su identificador y ver el mejor puntaje, para consultar datos rápido.
@@ -68,3 +73,4 @@ Como jugador, quiero responder una pregunta de cultura general cuando un monstru
 | 1.0 | 2026-10-06 | Versión inicial | Entrega 1 |
 | 1.1 | 2026-10-27 | Se agrega este historial de cambios | Registrar los cambios futuros, como el de CA-18 si entra HU-10 |
 | 1.2 | 2026-11-09 | HU-08, HU-09 y HU-10 se marcan como Won't. CA-18 queda solo como derrota directa | Ver `moscow.md` 1.2 |
+| 1.3 | 2026-11-11 | Nueva HU-12 (CA-30 y CA-31). CA-18 aclara «sin espada» | Darle uso a la espada y una forma de vencer a un monstruo, más simple que el combate de HU-10 |

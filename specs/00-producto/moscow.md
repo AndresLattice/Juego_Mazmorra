@@ -1,6 +1,6 @@
 # Priorización MoSCoW: Juego de mazmorra
 
-**Fecha:** 2026-10-06 · **Versión:** 1.2
+**Fecha:** 2026-10-06 · **Versión:** 1.3
 
 ## Capacidad
 
@@ -32,8 +32,9 @@ Ninguna Should entró. Las tres pasaron a Won't en la versión 1.2 (ver abajo).
 | Historia | Horas |
 |----------|-------|
 | HU-11 Mapa con colores en la consola | 2 |
+| HU-12 Pelear con la espada | 1 |
 
-Los Could no entran en el cálculo de horas. HU-11 no se construyó.
+Los Could no entran en el cálculo de horas. HU-11 no se construyó. HU-12 se construyó el último día porque cuesta poco: reutiliza el inventario y la búsqueda de celda libre.
 
 ## Won't (esta versión no)
 
@@ -71,6 +72,7 @@ No cambió la prioridad de ninguna historia. Cambió el orden de construcción: 
 | HU-01 a HU-07 | Terminadas e integradas en `main.py` |
 | HU-08, HU-09, HU-10 | Won't |
 | HU-11 | No se construyó |
+| HU-12 | Terminada |
 
 ## Plan de contingencia
 
@@ -89,3 +91,4 @@ Si mi capacidad se redujera a la mitad, unas 12 h:
 | 1.0 | 2026-10-06 | Versión inicial | Entrega 1 |
 | 1.1 | 2026-10-27 | Ninguna prioridad cambió. Se registra el avance y el orden real de construcción | HU-06 se construyó antes que HU-05 para tener lista la cola que usará BFS |
 | 1.2 | 2026-11-09 | HU-08, HU-09 y HU-10 pasan de Should a Won't | El tiempo alcanzó para los Must completos y probados, no para los Should. Se prefirió calidad a cantidad |
+| 1.3 | 2026-11-11 | Entra HU-12 como Could | Le da uso a la espada con poco código y sin estructuras nuevas |
