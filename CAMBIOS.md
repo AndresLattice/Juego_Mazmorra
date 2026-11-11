@@ -20,8 +20,10 @@ Vista general para la sustentación. El detalle de cada punto está en el archiv
 |---|---|---|
 | `00-producto/historias.md` | 1.1 | Se agrega historial de cambios |
 | | 1.2 | HU-08, 09 y 10 marcadas Won't. CA-18 queda como derrota directa |
+| | 1.3 | Nueva HU-12, pelear con la espada (CA-30, CA-31). CA-18 dice «sin espada» |
 | `00-producto/moscow.md` | 1.1 | Avance de la Entrega 2. HU-06 se construyó antes que HU-05 para tener la cola lista para BFS |
 | | 1.2 | HU-08, 09 y 10 pasan de Should a Won't |
+| | 1.3 | Entra HU-12 como Could |
 | `00-producto/estructuras.md` | 1.1 | Tabla de código reutilizado de Clase |
 | | 1.2 | Salen tabla hash y montículo. La ruta queda solo con BFS |
 | `01-historial/spec.md` | 1.1 | Nombres y `PilaVaciaError` alineados con el laboratorio de la semana 8 |
@@ -30,10 +32,12 @@ Vista general para la sustentación. El detalle de cada punto está en el archiv
 | `02-mapa/spec.md` y `plan.md` | 1.1 | Se agrega `objeto_en`, que la consola necesita para dibujar |
 | `03-inventario/plan.md` | 1.1 | Se declara lo que se quitó de la lista de Clase |
 | `07-partida/spec.md` | 1.0 | La partida existía desde la Entrega 2 sin spec propia |
+| | 1.1 | Pelea con espada |
 | `99-sistema/spec.md` | 0.2 | Estado de la Entrega 2 |
 | | 1.0 | Versión final: 7 componentes y el turno paso a paso |
 | `trazabilidad.md` | 2.0 | Trazabilidad en ambos sentidos |
 | | 3.0 | Se agregan CA-13, CA-14, CA-17 y CA-18 |
+| | 3.1 | Se agregan CA-30 y CA-31 |
 
 ## Decisiones de diseño que te pueden preguntar
 
@@ -42,7 +46,10 @@ Vista general para la sustentación. El detalle de cada punto está en el archiv
 | Deshacer y rehacer no mueven a los monstruos | El historial guarda solo acciones del jugador | `07-partida/spec.md` |
 | Chocar con un muro no gasta el turno | La acción no se hizo | `07-partida/plan.md` |
 | Si ganas y te alcanzan en el mismo turno, ganas | El jugador actúa primero | `07-partida/spec.md` |
-| Pisar a un monstruo es derrota | Un monstruo no es obstáculo; la colisión termina la partida | `07-partida/spec.md` |
+| Pisar a un monstruo o que te alcance es derrota, salvo que tengas espada | Un monstruo no es obstáculo; la colisión termina la partida | `07-partida/spec.md` |
+| El monstruo que matas no se borra: reaparece en otra celda | Así no cambian la lista de monstruos ni los turnos | `07-partida/spec.md` |
+| La espada sirve una sola vez | Se quita del inventario al usarla en la pelea | `07-partida/spec.md` |
+| Matar un monstruo no se deshace | Igual que los movimientos de los monstruos | `07-partida/spec.md` |
 | Un monstruo no entra a la celda de otro | Evita que dos monstruos queden en la misma celda | `07-partida/plan.md` |
 | BFS no esquiva a otros monstruos al calcular la ruta | Mantiene el BFS simple | `06-rutas/spec.md` |
 | La matriz del mapa usa `list` de filas | Arreglo de tamaño fijo, nunca crece | `02-mapa/plan.md` |

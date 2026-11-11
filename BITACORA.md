@@ -20,3 +20,4 @@
 - Qué se me dificultó: El tiempo. Me quedaron pocos días para la entrega final y tuve que elegir entre hacer todo o hacer bien lo obligatorio. También entender cómo BFS reconstruye el camino con la matriz de padres.
 - En qué usé IA: Para planear los commits, escribir las specs, el código de BFS, la persecución y el fin de partida, y sus pruebas. También para el análisis final, la trazabilidad y un borrador del informe. Revisé cada commit antes de aprobarlo.
 - Código reutilizado de Clase: `ListaCircular` de `Clase/semana_07`. Detalle en `specs/05-turnos/plan.md`.
+- Cambio del último día: agregué HU-12, pelear con la espada. Si un monstruo te alcanza y tienes espada, muere y reaparece en otro lugar. Lo hice moviendo al monstruo en vez de borrarlo, para no tocar la lista de monstruos ni los turnos.

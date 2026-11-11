@@ -44,6 +44,7 @@ En el mapa: `@` jugador, `M` monstruo, `#` obstáculo, `*` objeto, `.` libre.
 
 - **Ganas** si recoges todos los tesoros.
 - **Pierdes** si un monstruo llega a tu celda o si tú entras a la suya.
+- **Con espada** sobrevives a un choque: el monstruo muere, reaparece en otro lugar y la espada se gasta.
 
 ## Estructura
 

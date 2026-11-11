@@ -52,6 +52,7 @@ Versión final. Entrega final. n es la cantidad de elementos; f y c son las fila
 | deshacer, rehacer | O(n) | O(1) en el historial, más el costo de revertir sobre el inventario |
 | revisar victoria | O(f·c) | busca tesoros en todo el mapa |
 | revisar derrota | O(m) | revisa la posición de cada monstruo |
+| pelear | O(n + f·c) | quita la espada del inventario y busca una celda libre al azar |
 | crear partida | O(f·c) | crea el mapa celda por celda |
 
 ## Comparación de decisiones contra su alternativa
